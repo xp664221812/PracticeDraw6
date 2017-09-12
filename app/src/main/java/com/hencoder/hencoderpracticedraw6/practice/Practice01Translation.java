@@ -9,6 +9,8 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,6 +23,8 @@ import static com.hencoder.hencoderpracticedraw6.Utils.dpToPixel;
 public class Practice01Translation extends RelativeLayout {
     Button animateBt;
     ImageView imageView;
+    int count = 0;
+    int state = Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP ? 6 : 4;
 
     public Practice01Translation(Context context) {
         super(context);
@@ -38,6 +42,8 @@ public class Practice01Translation extends RelativeLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        final Interpolator interpolator=new AnticipateInterpolator();
+
         animateBt = (Button) findViewById(R.id.animateBt);
         imageView = (ImageView) findViewById(R.id.imageView);
         if (SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
@@ -49,6 +55,36 @@ public class Practice01Translation extends RelativeLayout {
             @Override
             public void onClick(final View v) {
                 // TODO 在这里处理点击事件，通过 View.animate().translationX/Y/Z() 来让 View 平移
+                switch (count) {
+                    case 0:
+                        imageView.animate().translationX(300).setDuration(500).setInterpolator(interpolator);
+                        break;
+                    case 1:
+                        imageView.animate().translationX(0);
+                        break;
+                    case 2:
+                        imageView.animate().translationY(300);
+                        break;
+                    case 3:
+                        imageView.animate().translationY(0);
+                        break;
+                    case 4:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            imageView.animate().translationZ(300);
+                        }
+
+                        break;
+                    case 5:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            imageView.animate().translationZ(0);
+                        }
+                        break;
+
+                }
+                count++;
+                if (state == count) {
+                    count = 0;
+                }
             }
         });
     }
